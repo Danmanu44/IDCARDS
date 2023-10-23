@@ -1,0 +1,212 @@
+﻿@page "/staffs"
+@using System.Text.Json
+@using IDCARDS.Shared.Models
+@using Blazor.QRCode;
+@using Blazored.Typeahead;
+@inject HttpClient Http
+@inject IJSRuntime jsRuntime
+ <h5>Generate the Id Cards and  Click Download   </h5>  
+<input style="" @bind-value="@query" placeholder="Enter Department Name" @onkeydown="@Enter" type="text"  class="text-field" />
+<button @onclick="search"class="btn btn-primary">Generate Id Cards</button>
+
+
+<button class="btn btn-primary" value="Download" @onclick="download">Download As Pdf</button>
+<div id="app" style=" display:block; " >
+
+
+    @*
+    <div id="con" class="idtemplate ">
+        <img src="/gsulogo.jfif" class="backgroundlogo"/>
+        <div class="grid-container">
+            <div class="grid-item head"><img src="/gsulogo.jfif" asp-append-version="true" style="width:30px;height:40px; flow-from:initial;"/></div>
+            <div class="grid-item">GOMBE STATE UNIVERSITY</div>
+        </div>
+  <div class="centerparent" id="subtitle">P.M.B 127,GOMBE NIGERIA</div>
+  <div>
+       <img class="passport centerparent"  src="/PassPort_hafiz.jpg" asp-append-version="true" width=100 />
+   </div>
+   <div class="centerparent" id="fullName">
+       Hafiz M. Danmanu
+   </div>
+   
+  <div class="grid-item" >Reg No:<span class="grid-item" id="regNumber">UG16/SCCS/1107</span></div>
+  
+
+
+ 
+  </div>*@
+   
+  
+</div>
+
+<div style="display:block" id="element-to-print">
+    <p id="qrcode" class="qrcode" style="display:none"></p>
+    
+  </div>
+  <div id="temp">
+ 
+                            <div id=""  class="centerparent" style="margin-left:23px; " >
+
+           
+                      <img class=""  src=@("/images/STF.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height:200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+                     <div style="position:relative;left:7px; top:-176px;z-index:3">
+                                            
+            
+
+                                            <table class= "table" style="position:relative; left:5px; top:22px;padding:1px">
+                                                <tr>
+                                                     <td rowspan=3 style="padding:0px; ">
+                                                        <div>
+                                                           <img  src=@("images/soyinka.jpeg") style="position:relative;left:-6px; top:13px;border:1px solid; border-radius:10px;" width=92 height=104     id=""/>
+
+                                                        </div>
+
+                                                    </td>
+                                                    <td>
+                                           
+                                                                                           <div style="margin-top:20px; margin-left:40px">
+                                                                                                  <div class="labels" style="height:10px;font-size:12px; width:200px;position:relative; left:-17px; top:-17px; vertical-align:middle;">Prof. Adeola Salawu O.</div>
+
+                                                       
+                                                       <div  class="labels" style="height:10px;position:relative;left:15px; top:-4px; align-content:center;">Professor</div>
+                                                        <div  class="labels" style="height:10px;position:relative;left:5px; top:8px; align-content:center; font-size:11px">Pharmacology & Therapeutics</div>
+                                                         <div  class="labels" style="height:10px;position:relative;left:52px; top:20px; align-content:center;">08033144451</div>
+                                                          <div  class="labels" style="position:relative;left:20px; top:33px; width:150px;height:12px; font-size:10px;font-size:14px;vertical-align:middle"  >1468</div>
+
+                          
+
+                                                                                           </div>
+
+
+                                                     </td>
+
+                                                   
+                        
+
+                                                </tr>
+                    
+                                         </table>
+              
+
+
+     
+                                            
+                                        </div>
+                                                                      
+
+                                        </div>
+                                           @*//<div class="html2pdf__page-break"></div>
+
+                                //backTemplate*@
+                                    <div  class="back" style="z-index:-1;height: 200px;width: 325px; display: block; background-repeat:no-repeat; background-size: 325px 205px;" id="back">
+                                         <img class=""  src=@("/images/STF BCK.jpg") style=" z-index:1;margin-top:0px;margin-right:0px;height: 200px; width: 325px;position:relative;left:10px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+                                        <p id="qr" style="position:relative; left:257px; top:-65px; z-index:2" > <QrCode  ElementId="1261"  Width="52" height="52" Text="1261"></QrCode></p>
+           
+                                    </div>
+                                     <div class="html2pdf__page-break"></div>
+
+                          
+</div>
+@code {
+    int k = 0;
+    int counter = 0;
+    int nextIndex = 0;
+    int nIndex = 0;
+    int bachtes = 0;
+    int rem = 0;
+    int totalCount = 0;
+    string expire = "November, 2025";
+    private List<Student> students { get; set; } = new List<Student>();
+    string jsonobj = "";
+    Student stud;
+    private string query { get; set; }
+    private bool imageExist = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
+
+        //   students = (await Http.GetFromJsonAsync<List<Student>>("api/Students")).ToList();
+        //   jsonobj = JsonSerializer.Serialize(students);
+
+        // await jsRuntime.InvokeVoidAsync("createAlert",jsonobj);
+
+        //     await jsRuntime.InvokeVoidAsync("print");
+
+        //  await jsRuntime.InvokeVoidAsync("generateTemplate",jsonobj);
+        // await jsRuntime.InvokeVoidAsync("testpdf",jsonobj);
+        //  search();
+
+
+
+    }
+
+    private async Task search()
+    {
+
+        //https://localhost:7268/api/Students/GetDepartment?Department=computer%20science
+        students = (await Http.GetFromJsonAsync<List<Student>>("https://localhost:44388/api/Students/GetDepartment?Department="+query)).ToList();
+        jsonobj = JsonSerializer.Serialize(students);
+       // query="Clicked Hafiz";
+        k++;
+       // StateHasChanged();
+        //await Task.Delay(7000);
+
+         
+    }
+    private void checkImage()
+    {
+        imageExist = false;
+
+
+
+    }
+    private void ClearImageExit()
+    {
+        imageExist = true;
+    }
+
+    private async Task  download()
+    {
+                       shouldRender=false; ShouldRender();
+
+         await jsRuntime.InvokeVoidAsync("GeneratePdf",query);
+        //  await jsRuntime.InvokeVoidAsync("blankAvoid");
+
+        //var timer = new Timer(new TimerCallback(_ =>
+        //    {
+        //        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+        //    }), null, 4000, 4000);
+
+
+    }
+
+    public async Task Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+             await jsRuntime.InvokeVoidAsync("GeneratePdf",query);
+        }
+    }
+     private bool shouldRender = true;
+
+    protected override bool ShouldRender()
+    {
+        return shouldRender;
+    }
+
+    // protected override void OnAfterRender(bool firstRender)
+    //{
+        
+    //    //if (firstRender)
+    //    //{
+    //    //    var timer = new Timer(new TimerCallback(_ =>
+    //    //    {
+    //    //        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+    //    //    }), null, 2000, 2000);
+    //    //}
+    //}
+
+   
+}

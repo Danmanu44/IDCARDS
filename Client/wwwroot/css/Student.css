@@ -1,0 +1,166 @@
+﻿body {
+}
+.idtemplate {
+    border: solid black;
+    border-radius: 10px;
+    width:100%;
+    height:300px;
+    margin:0px
+    padding: 6px;
+    font-weight:bold;
+    z-index:-2;
+    position:relative;
+    
+}
+.b {
+    display: inline-block;
+    position:relative;
+    top:10px;
+    padding: 5px;
+    border: 1px solid blue;
+    background-color: yellow;
+    width:80%;
+    text-align:center;
+}
+.c {
+    width:50px
+    display: inline-block;
+   font-size:12px;
+    padding: 5px;
+    border: 1px solid blue;
+    background-color: yellow;
+}
+
+/*width: 240px;
+height: 380px;*/
+.backgroundlogo {
+    position: absolute;
+    top: 110px;
+    left700px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-position-y: 120px;
+    background-size: 180px 180px;
+    opacity: 0.3;
+    padding: 10px;
+    z-index: -1
+}
+.grid-img {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    border: 1px solid blue;
+    background-color: yellow;
+}
+.grid-school {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    border: 1px solid blue;
+    background-color: yellow;
+}
+.grid-container {
+    display: grid;
+  
+  
+}
+
+.grid-item {
+     
+
+}
+
+#prop {
+    width: 210px;
+}
+#subtitle{
+    font-size:10px;
+    position:relative;
+    top: 0px;
+
+}
+
+
+
+.centerparent {
+    z-index:-1;
+   padding:0px;
+    background-size: 325px 200px;
+    height: 200px;
+    width: 325px;
+    background-repeat: no-repeat;
+    display:grid;
+    margin-top:5px;
+    margin-left: 0px;
+    justify-content: center;
+    align-items: center;
+}
+.back {
+   
+    background-size: 325px 200px;
+    height: 200px;
+    width: 325px;
+    margin-left:-10px;
+    background-repeat: no-repeat;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+.passport {
+    
+    height: 120px;
+    margin: 0px auto;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+.labels {
+    font-family: 'Tw Cen MT';
+    font-size: 10.0pt;
+    font-weight: bold;
+}
+
+
+
+
+#regNumber {
+    position: relative;
+    top: 29px;
+    left: -300px;
+}
+
+#department {
+    position: relative;
+    top: 15px;
+    left: -500px;
+}
+td {
+    font-size: 12px;
+    line-height: 12px;
+}
+tr {
+    line-height:12px;
+    
+}
+table{
+    line-height:12px;
+    border-collapse:collapse;
+}
+.image {
+    position: relative;
+    left: 50px;
+    top: 38px;
+}
+
+#nextOfKin {
+    position: relative;
+    top: -3px;
+    left: -170px;
+}
+#fullName{
+    position:relative;
+
+    top:50px;
+    left:-200px;
+}

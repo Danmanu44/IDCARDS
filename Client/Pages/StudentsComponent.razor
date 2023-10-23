@@ -1,0 +1,378 @@
+﻿@page "/students"
+@using System.Text.Json
+@using Blazored.Modal.Services
+@using IDCARDS.Shared.Models
+@using Blazor.QRCode;
+ 
+@using Blazored.Typeahead;
+@inject HttpClient Http
+@inject IJSRuntime jsRuntime
+
+<h3>GSU STUDENT ID CARDS  </h3>
+
+ @inject IModalService modal  
+   <h5>Generate the Id Cards and  Click Download   </h5>  
+   <div>
+    @*@foreach(var faculty in faculties)
+    {
+        <p class="bg-warning">@faculty</p>
+        
+    }*@
+</div>
+<input style="" @bind-value="@query" placeholder="Enter Department Name" @onkeydown="@Enter" type="text"  class="text-field" />
+<button @onclick="search"class="btn btn-primary">Generate Id Cards</button>
+
+
+<button class="btn btn-primary" value="Download" @onclick="download">Download As Pdf</button>
+<div id="app" style=" display:block; " >
+
+
+    @*
+    <div id="con" class="idtemplate ">
+        <img src="/gsulogo.jfif" class="backgroundlogo"/>
+        <div class="grid-container">
+            <div class="grid-item head"><img src="/gsulogo.jfif" asp-append-version="true" style="width:30px;height:40px; flow-from:initial;"/></div>
+            <div class="grid-item">GOMBE STATE UNIVERSITY</div>
+        </div>
+  <div class="centerparent" id="subtitle">P.M.B 127,GOMBE NIGERIA</div>
+  <div>
+       <img class="passport centerparent"  src="/PassPort_hafiz.jpg" asp-append-version="true" width=100 />
+   </div>
+   <div class="centerparent" id="fullName">
+       Hafiz M. Danmanu
+   </div>
+   
+  <div class="grid-item" >Reg No:<span class="grid-item" id="regNumber">UG16/SCCS/1107</span></div>
+  
+
+
+ 
+  </div>*@
+   
+  
+</div>
+
+<div style="display:block" id="element-to-print">
+    <p id="qrcode" class="qrcode" style="display:none"></p>
+    
+  </div>
+  <div id="temp">
+  @if (students != null)
+   {    
+
+        
+       rem = students.Count % 20; totalCount = (students.Count - rem) / 20;
+        
+        
+        @if(rem != 0){
+            bachtes = totalCount + 1;
+        }
+        else
+        {
+            bachtes = totalCount;
+        }
+
+        @for(int i=0;i<=bachtes; i++)
+        {
+
+            <div id=@("batch"+i)>
+
+                @for(int j=0; j < students.Count; j++)
+                {
+                                                    
+
+                    @if (nIndex  == j)
+                    {
+                        
+
+                        @if (counter <= 19)
+                        {
+                            counter++;
+                            <div id=""  class="centerparent" style="margin-left:5px;" >
+
+            @if(students[j].Faculty.ToLower().Trim(' ')=="science")
+            {
+
+         <img class=""  src=@("/images/FOS.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 195px; width: 320px;position:relative;left:10px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+              
+
+                    
+         
+            }
+            else if(students[j].Faculty.ToLower().Trim(' ').Contains("education"))
+            {
+                                      <img class=""  src=@("/images/FOE.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+
+
+            }
+            else if(students[j].Faculty.ToLower().Trim(' ').Contains("artsandsocialscience"))
+            {
+                                      <img class=""  src=@("/images/FAS.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+            }
+            else if(students[j].Faculty.ToLower().Trim(' ')=="law")
+            {
+                                       <img class=""  src=@("/images/FOL.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+
+
+
+            }
+            else if(students[j].Faculty.ToLower().Trim(' ').Contains("pharmaceutical"))
+            {
+                 
+      
+                                       <img class=""  src=@("/images/FOPS.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+
+            }
+                                else if (students[j].Faculty.ToLower().Trim(' ').Contains("humanresource"))
+            {
+                 
+                                      <img class=""  src=@("/images/FOS.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+
+            }
+            else if(students[j].Faculty.ToLower().Trim(' ').Contains("pg"))
+            {
+                
+                                       <img class=""  src=@("images/FOS.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+            }
+            else if(students[j].Faculty.ToLower().Trim(' ').Contains("medical"))
+            {
+                  
+                                    <img class=""  src=@("images/COM.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+
+            }
+            else
+            {
+                                 <img class=""  src=@("images/FOS.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 320px;position:relative;left:0px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+
+                                    
+            }
+
+                             <div style="position:relative;left:10px; top:-176px;z-index:3">
+                                            
+            
+
+                                            <table class= "table" style="position:relative; left:5px; top:22px;padding:1px">
+                                                <tr>
+                                                    <td>
+                                            @{if (students[j].MiddleName == "")
+                                            {
+
+                                                 <div class="labels" style="height:10px; width:200px;position:relative; left:33px; top:-17px; "> @(students[j].FirstName.Substring(0,1).ToString().ToUpper()+students[j].FirstName.Substring(1,students[j].FirstName.Count()-1).ToString().ToLower()) @(students[j].LastName.Substring(0,1).ToString().ToUpper()+students[j].LastName.Substring(1,students[j].LastName.Count()-1).ToString().ToLower())</div>
+ 
+                                            }
+                                            else 
+                                            {
+                                                  <div class="labels" style="height:10px; width:200px;position:relative; left:33px; top:-17px;"><span style="font-size:11px; font-weight:bold">@(students[j].FirstName.ToString().ToUpper()) @(students[j].LastName.ToString().ToUpper())  @(students[j].MiddleName.ToString().ToUpper())</span></div>
+
+ 
+                                               // @student.FirstName.Substring(0).ToString(); @student.MiddleName.ElementAt(0).ToString(); @student.LastName
+                                            }
+                                            }
+                                                       
+                                                       <div  class="labels" style="height:10px;position:relative;left:45px; top:-9px; align-content:center; ">@students[j].RegNumber.ToUpper()</div>
+                                                        <div  class="labels" style="height:10px;position:relative;left:64px; top:-6px; align-content:center; font-size:14px"> @students[j].Department</div>
+                                                         <div  class="labels" style="height:10px;position:relative;left:100px; top:0px; align-content:center; " > @("0"+students[j].NextOfKinPhone)</div>
+                          
+
+
+                                                     </td>
+
+                                                    <td rowspan=3 style="padding:0px; ">
+                                                        <div>
+                                                           <img  src=@("images/students/"+students[j].ImagePath) style="position:relative;left:-5px; top:15px;border:1px solid; border-radius:10px;" width=92 height=100     id=""/>
+
+                                                        </div>
+                                                    @if (students[j].RegNumber.Substring(10).StartsWith('2'))
+                                                    {
+                                                        expire = "November, 2025"; 
+                                                    }
+                                                else if(students[j].RegNumber.Contains("MDMD"))
+                                                {
+                                                     expire = "November, 2025"; 
+                                                }
+
+                                                @{
+                                                    if (students[j].IdExpireDate.HasValue)
+                                                    {
+                                                        ExpireDate = students[j].IdExpireDate.Value;
+                                                        
+
+                                                        
+                                                    }
+                                                }
+                                               
+                                                <div  class="labels" style="position:relative;left:-20px; top:5px; width:150px;height:12px;color:white; font-size:10px;"  >December @ExpireDate.Year</div>
+
+                                                    </td>
+                        
+
+                                                </tr>
+                    
+                                         </table>
+              
+
+
+     
+                                            
+                                        </div>
+                                                                      
+
+                                        </div>
+                                           //<div class="html2pdf__page-break"></div>
+
+                                //backTemplate
+                                    <div  class="back" style="z-index:-1;height: 200px;width: 325px; display: block; background-repeat:no-repeat; background-size: 325px 205px;" id="back">
+                                         <img class=""  src=@("/images/STD BCK.jpg") style=" z-index:1;margin-top:0px;margin-right:-3px;height: 200px; width: 325px;position:relative;left:5px; top:0px;border:1px solid black; border-radius:10px;"     id=""/>
+                                        <p id="qr" style="position:relative; left:257px; top:-65px; z-index:2" > <QrCode  ElementId=@students[j].Id.ToString()  Width="52" height="52" Text=@students[j].RegNumber></QrCode></p>
+           
+                                    </div>
+                                     <div class="html2pdf__page-break"></div>
+
+                            nIndex = j + 1;
+
+                        }
+                        else
+                        {
+                            counter = 0;
+                            nIndex = j;//origin n=j
+                            break;
+                        }
+
+
+                    }
+
+           
+
+   
+                }
+
+
+
+               </div>
+           
+        }
+
+        {@*shouldRender=true; ShouldRender();*@}
+       
+     
+
+   
+   }
+   
+</div>
+
+ 
+@k;
+
+@code {
+    DateTime ExpireDate;
+    int k = 0;
+    int counter = 0;
+    int nextIndex = 0;
+    int nIndex = 0;
+    int bachtes = 0;
+    int rem = 0;
+    int totalCount = 0;
+    string expire = "November, 2025";
+    private List<Student> students { get; set; } = new List<Student>();
+    private List<String> faculties { get; set; } = new List<string>();
+    string jsonobj = "";
+    Student stud;
+    private string query { get; set; }
+    private bool imageExist = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        faculties = (await Http.GetFromJsonAsync<List<String>>("/api/Students/GetDistinctFaculties")).ToList();
+
+
+        //   students = (await Http.GetFromJsonAsync<List<Student>>("api/Students")).ToList();
+        //   jsonobj = JsonSerializer.Serialize(students);
+
+        // await jsRuntime.InvokeVoidAsync("createAlert",jsonobj);
+
+        //     await jsRuntime.InvokeVoidAsync("print");
+
+        //  await jsRuntime.InvokeVoidAsync("generateTemplate",jsonobj);
+        // await jsRuntime.InvokeVoidAsync("testpdf",jsonobj);
+        //  search();
+
+
+
+    }
+
+    private async Task search()
+    {
+
+        //https://localhost:7268/api/Students/GetDepartment?Department=computer%20science
+        students = (await Http.GetFromJsonAsync<List<Student>>("/api/Students/GetDepartment?Department="+query)).ToList();
+        jsonobj = JsonSerializer.Serialize(students);
+       // query="Clicked Hafiz";
+        k++;
+       // StateHasChanged();
+        //await Task.Delay(7000);
+
+         
+    }
+    private void checkImage()
+    {
+        imageExist = false;
+
+
+
+    }
+    private void ClearImageExit()
+    {
+        imageExist = true;
+    }
+
+    private async Task  download()
+    {
+                       shouldRender=false; ShouldRender();
+
+         await jsRuntime.InvokeVoidAsync("GeneratePdf",query);
+        //  await jsRuntime.InvokeVoidAsync("blankAvoid");
+
+        //var timer = new Timer(new TimerCallback(_ =>
+        //    {
+        //        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+        //    }), null, 4000, 4000);
+
+
+    }
+
+    public async Task Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+             await jsRuntime.InvokeVoidAsync("GeneratePdf",query);
+        }
+    }
+     private bool shouldRender = true;
+
+    protected override bool ShouldRender()
+    {
+        return shouldRender;
+    }
+
+    // protected override void OnAfterRender(bool firstRender)
+    //{
+        
+    //    //if (firstRender)
+    //    //{
+    //    //    var timer = new Timer(new TimerCallback(_ =>
+    //    //    {
+    //    //        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+    //    //    }), null, 2000, 2000);
+    //    //}
+    //}
+
+   
+}

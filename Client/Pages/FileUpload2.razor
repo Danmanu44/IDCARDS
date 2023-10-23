@@ -1,0 +1,150 @@
+﻿@page "/file-upload2"
+@using System.Linq
+@using System.Net.Http.Headers
+@using IDCARDS.Client.Pages.Dialogs
+@using Microsoft.Extensions.Logging
+@inject HttpClient Http
+@inject ILogger<FileUpload2> Logger
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@inject IModalService modal;
+@inject NavigationManager uriHelper;
+@using System.Threading;
+
+<h1>Students Images Upload </h1>
+
+<p>
+    <label>
+        Upload up to @maxAllowedFiles Images :
+        <InputFile OnChange="@OnInputFileChange" multiple />
+    </label>
+</p>
+files
+
+@if (fileNames.Count > 0)
+{
+    <div class="card">
+        @if (fileNames.Count > 0) {
+             
+             <div class="card-header"> @fileNames.Count Images Uploaded Successfully </div>
+        }
+       
+
+        <div class="card-body">
+            <ul>
+                @if (fileNames.Count > 0)
+                {
+                     @foreach (var fileName in fileNames)
+                    {
+                        <li>
+                            File: @fileName
+                            <br>
+                            <span>
+                                Stored File Name: @GetStoredFileName(fileName)
+                            </span>
+                            
+                       
+                        </li>
+                    }
+                }
+                @fileNames.Clear
+            </ul>
+        </div>
+    </div>
+}
+
+@code {
+    private List<File> files = new();
+    private List<String> fileNames = new();
+    private List<UploadResult> uploadResults = new();
+    private int maxAllowedFiles = int.MaxValue;
+    private long maxFileSize = long.MaxValue;
+    private bool shouldRender;
+
+    protected override bool ShouldRender() => shouldRender;
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        shouldRender = false;
+        var upload = false;
+
+        using var content = new MultipartFormDataContent();
+
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            fileNames.Add(file.Name);
+            content.Add(
+                       content: fileContent,
+                       name: "\"files\"",
+                       fileName: file.Name);
+            upload = true;
+
+
+
+
+
+
+
+        }
+        if (upload)
+        {
+            var response = await Http.PostAsync("FileSave", content);
+            var newUploadResults = await response.Content.ReadFromJsonAsync<List<UploadResult>>();
+
+            if(newUploadResults is not null)
+            {
+                uploadResults = uploadResults.Concat(newUploadResults).ToList();
+                modal.Show<Upload>(uploadResults.Count + " Images Uploaded Successfully");
+
+                StateHasChanged();
+
+
+            }
+        }
+
+
+
+        shouldRender = true;
+    }
+    private string? GetStoredFileName(string fileName)
+    {
+        var uploadResult = uploadResults.FirstOrDefault(f => f.FileName == fileName);
+        if(uploadResult is not null)
+        {
+            return uploadResult.StoredFileName;
+        }
+        return "File not found";
+
+    }
+
+    private static bool FileUpload(IList<UploadResult> uploadResults,
+        string? fileName, ILogger<FileUpload2> logger, out UploadResult result)
+    {
+        result = uploadResults.SingleOrDefault(f => f.FileName == fileName) ?? new();
+
+        if (!result.Uploaded)
+        {
+            logger.LogInformation("{FileName} not uploaded (Err: 5)", fileName);
+            result.ErrorCode = 5;
+        }
+
+        return result.Uploaded;
+    }
+     protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            var timer = new Timer(new TimerCallback(_ =>
+            {
+                uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+            }), null, 4000, 4000);
+        }
+    }
+
+    private class File
+    {
+        public string? Name { get; set; }
+    }
+}
