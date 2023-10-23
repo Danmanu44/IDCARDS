@@ -57,7 +57,7 @@ We welcome contributions from the community. To contribute to the project, pleas
 
 ## Authors
 
-- [Your Name](https://github.com/Danmanu44)
+- [Hafiz Danmanu](https://github.com/Danmanu44)
 
 Feel free to reach out if you have any questions or suggestions.
 
